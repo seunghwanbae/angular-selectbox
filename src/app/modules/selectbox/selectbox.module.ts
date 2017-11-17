@@ -6,6 +6,7 @@ import { SelectboxComponent } from './components/selectbox.component';
   imports: [
     CommonModule
   ],
-  declarations: [SelectboxComponent]
+  declarations: [SelectboxComponent],
+  exports: [SelectboxComponent]
 })
 export class SelectboxModule { }
