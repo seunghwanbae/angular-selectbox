@@ -1,4 +1,24 @@
+<button type="button" class="selected-text" >
+	<ng-container *ngIf="selectedValue; else selectedPlaceHolder">
+		{{selectedValue.name}}
+	</ng-container>
+	<ng-template #selectedPlaceHolder>
+		<span class="selected-text__placeholder">{{placeholder}}</span>
+	</ng-template>
+</button>
 
-  <!-- <ng-container modalContent > -->
-    <ng-content select="[optionList]"></ng-content>
-  <!-- </ng-container> -->
+<div class="select-list" *ngIf="isFocus" [ngStyle]="{'max-height.px': scrollHeight, 'max-width.px': scrollWidth}">
+	<ul class="select-list__wrap">
+		<li class="selectitem" *ngIf="selectList.length <= 0">
+			<span class="selectitem__wrap selectitem__wrap--nodata">No Select Data</span>
+		</li>
+		<li class="selectitem" *ngFor="let item of selectList">
+			<span class="selectitem__wrap" (click)="changeSelect(item)" [ngClass]="{'is-selected': item.selected}">{{item.name}}</span>
+			<ul class="select-list__wrap" *ngIf="item.list">
+				<li class="selectitem" *ngFor="let item of item.list">
+					<span class="selectitem__wrap" (click)="changeSelect(item)" [ngClass]="{'is-selected': item.selected}">{{item.name}}</span>
+				</li>
+			</ul>
+		</li>
+	</ul>
+</div>
