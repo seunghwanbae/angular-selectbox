@@ -1,0 +1,25 @@
+@import './../styles/_preset';
+.header-wrap {
+  padding: 20px;
+}
+.header-title {
+  margin: 0;
+  padding: 0;
+  font-size: 50px;
+  color: $colorTextTitle;
+  font-family: $fontsContent;
+  font-weight: 100;
+}
+
+.content-wrap {
+  padding: 20px;
+}
+.content-section {
+  padding: 20px;
+  font-weight: 300;
+}
+.section-title {
+  margin: 0;
+  font-weight: 300;
+}
+
