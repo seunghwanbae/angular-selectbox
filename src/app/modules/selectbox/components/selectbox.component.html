@@ -1,6 +1,11 @@
-<button type="button" class="selected-text" #selectButton (click)="selectButtonClick()">
+<button type="button"
+  #selectButton
+  class="selected-text"
+  [class.is-disabled]="disabled"
+  [class.is-readonly]="readonly"
+  (click)="listToggle()">
   <ng-container *ngIf="selectedValues.length > 0; else selectedPlaceHolder">
-    <ng-container *ngFor="let item of selectedValues; let l=last;">
+    <ng-container *ngFor="let item of selectedValues; let l = last;">
       {{item.name}}{{(!l) ? ', ': ''}}
     </ng-container>
   </ng-container>
@@ -9,23 +14,35 @@
   </ng-template>
 </button>
 
-<div class="select-list" *ngIf="isShowList" [ngStyle]="{'max-height.px': scrollHeight, 'max-width.px': scrollWidth}">
+<div
+  class="select-list"
+  *ngIf="isShowList && !disabled"
+  [class.is-readonly]="readonly"
+  [ngStyle]="{'max-height.px': scrollHeight, 'max-width.px': scrollWidth}"
+  (mouseover)="focusItem = undefined">
   <ul class="select-list__wrap" *ngIf="selectList.length <= 0; else selectListContainer">
     <li class="selectitem" >
       <span class="selectitem__wrap selectitem__wrap--nodata">No Select Data</span>
     </li>
   </ul>
   <ng-template #selectListContainer>
-    <ng-container [ngTemplateOutlet]="selectListTemplate" [ngTemplateOutletContext]="{ $implicit: selectList }">
+    <ng-container [ngTemplateOutlet]="selectListTemplate" [ngTemplateOutletContext]="{$implicit: {list: selectList, disabled: false}}">
     </ng-container>
   </ng-template>
 </div>
 
 <ng-template #selectListTemplate let-data>
   <ul class="select-list__wrap">
-    <li class="selectitem" *ngFor="let item of data">
-      <span class="selectitem__wrap" (click)="changeSelect(item, $event)" [ngClass]="{'is-selected': selectedValues.indexOf(item) > -1}">{{item.name}}</span>
-      <ng-container *ngIf="item.list" [ngTemplateOutlet]="selectListTemplate" [ngTemplateOutletContext]="{ $implicit: item.list }">
+    <li class="selectitem" *ngFor="let item of data.list">
+      <span class="selectitem__wrap"
+        *ngIf="!item.disabled && !data.disabled; else disabledSelectItem"
+        (click)="changeSelect(item)"
+        [class.is-selected]="selectedValues.indexOf(item) > -1"
+        [class.is-focus]="focusItem === item">{{item.name}}</span>
+      <ng-template #disabledSelectItem><span class="selectitem__wrap is-disabled">{{item.name}}</span></ng-template>
+      <ng-container *ngIf="item.list"
+        [ngTemplateOutlet]="selectListTemplate"
+        [ngTemplateOutletContext]="{$implicit: {list: item.list, disabled: data.disabled || item.disabled || (selectedValues.indexOf(item) > -1)}}">
       </ng-container>
     </li>
   </ul>

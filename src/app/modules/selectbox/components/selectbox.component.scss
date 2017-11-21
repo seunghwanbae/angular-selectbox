@@ -12,7 +12,7 @@
   width: 100%;
   height: 32px;
   margin: 0;
-  padding: 0 25px 0 15px;
+  padding: 0 25px 0 10px;
   border: 1px solid $colorBorderNormal;
   appearance: none;
   border-radius: $borderRadiusForm;
@@ -27,6 +27,18 @@
   font-size: $fontSizeNormal;
   cursor: pointer;
 
+  &.is-disabled {
+    opacity: .5;
+  }
+  &.is-readonly {
+    color: lighten($colorTextNormal, 50%);
+    .selected-text__placeholder {
+      color: lighten($colorTextNormal, 50%);
+    }
+    &:after {
+      opacity: .5;
+    }
+  }
   &:after {
     @include triangleArrow($colorTextNormal, 5px);
     content: '';
@@ -51,6 +63,11 @@
   background: $colorBackgroundContent;
   box-shadow: $shadowForm;
   overflow: auto;
+  &.is-readonly {
+    .selectitem__wrap {
+      opacity: .5;
+    }
+  }
 }
 .select-list__wrap {
   margin: 0;
@@ -62,45 +79,61 @@
   padding: 0;
   list-style: none;
   .selectitem {
-    .selectitem__wrap {
-      padding-left: 30px;
-    }
-    .selectitem {
-      .selectitem__wrap {
-        padding-left: 45px;
-      }
-      .selectitem {
-        .selectitem__wrap {
-          padding-left: 60px;
-        }
-      }
-    }
+    padding-left: 15px;
   }
+  // .selectitem {
+  //   .selectitem__wrap {
+  //     padding-left: 30px;
+  //   }
+  //   .selectitem {
+  //     .selectitem__wrap {
+  //       padding-left: 45px;
+  //     }
+  //     .selectitem {
+  //       .selectitem__wrap {
+  //         padding-left: 60px;
+  //       }
+  //     }
+  //   }
+  // }
 }
 .selectitem__wrap {
   position: relative;
   display: block;
   line-height: 25px;
-  padding: 0 15px;
+  padding: 0 15px 0 6px;
   white-space: nowrap;
   font-size: $fontSizeNormal;
   cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  &.is-focus,
   &:hover {
     background: $colorBackgroundHover;
   }
+  &:before {
+    content: '';
+    display: inline-block;
+    vertical-align: middle;
+    width: 3px;
+    height: 5px;
+    margin: -6px 4px 0 0;
+    border: 5px solid $colorMain;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    opacity: 0;
+  }
   &.is-selected {
-    &:after {
-      content: '';
-      display: block;
-      position: absolute;
-      left: 5px;
-      top: 50%;
-      width: 3px;
-      height: 6px;
-      margin-top: -6px;
-      border: 5px solid $colorMain;
-      border-width: 0 2px 2px 0;
-      transform: rotate(45deg);
+    &:before {
+      opacity: 1;
+    }
+  }
+  &.is-disabled {
+    opacity: .5;
+    cursor: default;
+    &:hover {
+      background: none;
     }
   }
 }

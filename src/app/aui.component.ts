@@ -16,18 +16,29 @@ export class AuiComponent {
       value: 5, name: 'Comment',
       list: [
         {
-          value: 6, name: 'Comment Content1'
+          value: 6, name: 'Content',
         }, {
-          value: 6, name: 'Comment Writer1',
+          value: 6, name: 'Writer', disabled: true,
           list: [
-            {value: 12, name: 'Comment Content2'},
-            {value: 9, name: 'Comment Writer2'}
+            {value: 12, name: 'Group'},
+            {value: 9, name: 'Team'}
           ]
         }
       ]
+    }, {
+      value: 9, name: 'Name'
+    }, {
+      value: 19, name: 'Project'
     }
   ];
+  public selectboxValue1: any;
+
   resetSelectValue() {
+    this.selectboxValue1 = null;
     console.log('reset');
   }
+  selectModelChange() {
+    console.log('select model change', this.selectboxValue1);
+  }
+
 }
