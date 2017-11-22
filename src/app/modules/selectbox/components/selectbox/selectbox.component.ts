@@ -7,7 +7,8 @@ import { Component,
   ViewChild,
   ElementRef,
   Renderer2,
-  forwardRef
+  forwardRef,
+  HostBinding
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
@@ -46,12 +47,12 @@ export class SelectboxComponent implements OnInit, ControlValueAccessor {
 
   public focusItem: any;
 
-  public isShowList: boolean = false;
-
   public outsideClickEvent: any;
   public outsideFocusEvent: any;
   public outsideScrollEvent: any;
 
+  @HostBinding('class.is-active')
+  public isShowList: boolean = false;
 
   @ViewChild('selectButton') selectButton: ElementRef;
 

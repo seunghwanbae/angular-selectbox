@@ -16,19 +16,32 @@
     <h3 class="section-title">Single(required)</h3>
     <div class="example-wrap">
       <aui-selectbox
-        [(ngModel)]="selectboxValue1"
-        [selectList]="selectboxOptions"
-        (ngModelChange)="selectModelChange()"
+        [(ngModel)]="selectboxValueSingle"
+        [placeholder]="'Search Target'"
+        [selectList]="selectboxOptionsSingle"
+        (ngModelChange)="selectModelChangeSingle()"
         required
-        [ngStyle]="{'width.px':200}">
+        [ngStyle]="{'width.px':150}">
       </aui-selectbox>
-      Single Selectbox Model: {{JSON.stringify(this.selectboxValue1)}}
+      Single Selectbox Model: {{JSON.stringify(this.selectboxValueSingle)}}
       <div class="group">
-        <button aui-button [type]="'button'" [style]="'important'" (click)="selectboxValue1 = undefined">Set undefined</button>
-        <button aui-button [type]="'button'" [style]="'important'" (click)="selectboxValue1 = 'invalid'">Set 'invalid'</button>
-        <button aui-button [type]="'button'" [style]="'important'" (click)="selectboxValue1 = this.selectboxOptions[0]">Set first option</button>
+        <button aui-button [type]="'button'" (click)="selectboxValueSingle = this.selectboxOptionsSingle[0]">Set first option</button>
+        <button aui-button [type]="'button'" (click)="selectboxValueSingle = 'invalid'">Set 'invalid'</button>
+        <button aui-button [type]="'button'" (click)="selectboxValueSingle = undefined">Set undefined</button>
       </div>
     </div>
+    <h3 class="section-title">Multiple(required, limit 4)</h3>
+    <div class="example-wrap">
+      <aui-selectbox
+        [(ngModel)]="selectboxValueMulti"
+        [multiple]="true"
+        [multipleLimit]="4"
+        [selectList]="selectboxOptionsMulti"
+        (ngModelChange)="selectModelChangeMulti()"
+        required
+        [ngStyle]="{'width.px':150}">
+      </aui-selectbox>
+      Single Selectbox Model: {{JSON.stringify(this.selectboxValueMulti)}}
   </div>
 </div>
 <!-- 
