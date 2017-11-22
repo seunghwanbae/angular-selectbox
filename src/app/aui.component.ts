@@ -1,14 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'aui-root',
   templateUrl: './aui.component.html',
   styleUrls: ['./aui.component.scss']
 })
-export class AuiComponent {
+export class AuiComponent implements OnInit {
+  public JSON = JSON;
   public title = 'Angular UI Components';
   public selectboxOptions = [
     {
+      value: 0, name: 'All'
+    }, {
       value: 1, name: 'Title'
     }, {
       value: 2, name: 'SubTitle'
@@ -31,14 +34,17 @@ export class AuiComponent {
       value: 19, name: 'Project'
     }
   ];
+  public selectboxValue1Console: any;
   public selectboxValue1: any;
 
-  resetSelectValue() {
-    this.selectboxValue1 = null;
-    console.log('reset');
+  ngOnInit() {
+    this.selectboxValue1 = this.selectboxOptions[0];
   }
+
   selectModelChange() {
-    console.log('select model change', this.selectboxValue1);
+    console.log('select model change: ', this.selectboxValue1 );
   }
+
+  constructor() {}
 
 }

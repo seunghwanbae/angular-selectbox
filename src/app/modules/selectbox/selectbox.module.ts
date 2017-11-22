@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
-import {FormsModule} from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { SelectboxComponent } from './components/selectbox.component';
+import { SelectboxComponent } from './components/selectbox/selectbox.component';
 
 @NgModule({
   imports: [

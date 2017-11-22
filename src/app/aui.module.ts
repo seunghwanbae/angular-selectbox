@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { AuiComponent } from './aui.component';
 import { SelectboxModule } from './modules/selectbox/selectbox.module';
+import { ButtonModule } from './modules/button/button.module';
 
 @NgModule({
   declarations: [
@@ -10,7 +11,8 @@ import { SelectboxModule } from './modules/selectbox/selectbox.module';
   ],
   imports: [
     BrowserModule,
-    SelectboxModule
+    SelectboxModule,
+    ButtonModule
   ],
   providers: [],
   bootstrap: [AuiComponent]

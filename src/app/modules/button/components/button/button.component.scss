@@ -1,0 +1,32 @@
+@import './../../../../../styles/_preset';
+
+:host {
+  display: inline-block;
+  vertical-align: middle;
+  height: $inputHeight;
+  margin: 0;
+  padding: 0 $inputPadding;
+  border: $buttonNormalBorder;
+  box-sizing: border-box;
+  appearance: none;
+  border-radius: $borderRadiusForm;
+  line-height: $inputHeight;
+  text-align: center;
+  background: $colorButtonNormalBackground;
+  color: $colorButtonNormalText;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: $fontSizeNormal;
+  cursor: pointer;
+  &.button-important {
+    border: $buttonImportantBorder;
+    background: $colorButtonImportantBackground;
+    color: $colorButtonImportantText;
+  }
+  &.button-unimportant {
+    border: $buttonUnmportantBorder;
+    background: $colorButtonUnmportantBackground;
+    color: $colorButtonUnmportantText;
+  }
+}

@@ -83,21 +83,12 @@ export class SelectboxComponent implements OnInit, ControlValueAccessor {
     this.scrollWidth = value;
   }
 
-  @Output() change;
-
   constructor(
     public renderer: Renderer2,
     public hostElement: ElementRef
   ) { }
 
   ngOnInit() {}
-
-  // @HostListener('focusin', ['$event'])
-  // focusIn(e) {
-  //   e.stopImmediatePropagation();
-  //   e.preventDefault();
-  //   e.stopPropagation();
-  // }
 
   @HostListener('keydown', ['$event'])
   keyDown(e) {
@@ -211,7 +202,7 @@ export class SelectboxComponent implements OnInit, ControlValueAccessor {
     } else {
       this.selectedValues = [selectItem];
     }
-    this.onChange(this.selectedValues);
+    this.changeEmit( this.selectedValues );
   }
 
   checkChildList ( list ) {
@@ -254,20 +245,46 @@ export class SelectboxComponent implements OnInit, ControlValueAccessor {
     return ( keyList[num] ) ? keyList[num] : undefined;
   }
 
+  changeEmit( valueArray: any[] ) {
+    let emitValue;
+
+    if ( this.multiple ) {
+      emitValue = valueArray;
+    } else {
+      if ( valueArray.length <= 0 ) {
+        emitValue = undefined;
+      } else {
+        emitValue = valueArray[0];
+      }
+    }
+
+    this.onChange( emitValue );
+  }
+
   /* ControlValueAccessor */
+  public onChange = (_) => { };
   public onTouched = () => {};
   private propagateChange = (_: any) => { };
-  public onChange = (value) => {
-    this.propagateChange(this.selectedValues);
-  }
   writeValue(values: any) {
-    console.log('write value', values);
+    const selectListItems = this.getAllSelectItems();
+    let insertValue;
+
     if ( values ) {
-      this.selectedValues = values;
+      if ( !Array.isArray(values) ) {
+        if ( selectListItems.indexOf(values) < 0 ) {
+          insertValue = [];
+        } else {
+          insertValue = [values];
+        }
+      } else {
+        insertValue = values;
+      }
     } else {
-      this.selectedValues = [];
+      insertValue = [];
     }
-    this.onChange(this.selectedValues);
+
+    this.selectedValues = insertValue;
+    this.changeEmit( this.selectedValues );
   }
   registerOnChange(fn: any) {
     this.onChange = fn;

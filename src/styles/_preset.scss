@@ -2,15 +2,19 @@
 $fontsTitle: 'Pacifico', cursive;
 $fontsContent: 'Roboto', sans-serif;
 
-// font size
+// size
 $fontSizeNormal: 15px;
+$inputHeight: 40px;
+$inputPadding: 15px;
 
-// color brand
-$colorMain: #222;
+// color
+$colorMain: #ff004c;
+$colorError: #bf0000;
 
 // color border
 $colorBorderNormal: #bbb;
 $colorBorderDark: #999;
+$colorBorderError: $colorError;
 
 // color text
 $colorTextInactive: #999;
@@ -23,10 +27,23 @@ $colorBackgroundHover: #eee;
 $colorBackgroundContent: #fff;
 
 // border radius
-$borderRadiusForm: 4px;
+$borderRadiusForm: 3px;
 
 // box shadow
 $shadowForm: 0 1px 2px rgba(150, 150, 150, .5);
+
+//button
+$buttonNormalBorder: 1px solid #ccc;
+$colorButtonNormalBackground: #fff;
+$colorButtonNormalText: #333;
+
+$buttonImportantBorder: 1px solid $colorMain;
+$colorButtonImportantBackground: $colorMain;
+$colorButtonImportantText: #fff;
+
+$buttonUnmportantBorder: 1px solid $colorMain;
+$colorButtonUnmportantBackground: #fff;
+$colorButtonUnmportantText: $colorMain;
 
 // design preset
 @mixin triangleArrow($color, $size) {

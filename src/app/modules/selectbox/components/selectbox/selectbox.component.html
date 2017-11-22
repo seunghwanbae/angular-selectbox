@@ -3,7 +3,8 @@
   class="selected-text"
   [class.is-disabled]="disabled"
   [class.is-readonly]="readonly"
-  (click)="listToggle()">
+  (click)="listToggle()"
+  (blur)="onTouched()">
   <ng-container *ngIf="selectedValues.length > 0; else selectedPlaceHolder">
     <ng-container *ngFor="let item of selectedValues; let l = last;">
       {{item.name}}{{(!l) ? ', ': ''}}
