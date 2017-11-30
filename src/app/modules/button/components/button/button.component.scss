@@ -1,32 +1,42 @@
 @import './../../../../../styles/_preset';
 
-:host {
+@mixin buttonStyle($borderColor, $backgroundColor, $textColor){
   display: inline-block;
   vertical-align: middle;
   height: $inputHeight;
   margin: 0;
   padding: 0 $inputPadding;
-  border: $buttonNormalBorder;
+  border: 1px solid $borderColor;
   box-sizing: border-box;
   appearance: none;
   border-radius: $borderRadiusForm;
   line-height: $inputHeight;
   text-align: center;
-  background: $colorButtonNormalBackground;
-  color: $colorButtonNormalText;
+  background: $backgroundColor;
+  color: $textColor;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: $fontSizeNormal;
   cursor: pointer;
+  transition: all .3s;
+}
+
+:host {
+  @include buttonStyle($buttonNormalBorderColor, $colorButtonNormalBackground, $colorButtonNormalText);
+  &:hover {
+    @include uiHover(#000, .2);
+  }
   &.button-important {
-    border: $buttonImportantBorder;
-    background: $colorButtonImportantBackground;
-    color: $colorButtonImportantText;
+    @include buttonStyle($buttonImportantBorderColor, $colorButtonImportantBackground, $colorButtonImportantText);
+    &:hover {
+      @include uiHover(#000, .4);
+    }
   }
   &.button-unimportant {
-    border: $buttonUnmportantBorder;
-    background: $colorButtonUnmportantBackground;
-    color: $colorButtonUnmportantText;
+    @include buttonStyle($buttonUnmportantBorderColor, $colorButtonUnmportantBackground, $colorButtonUnmportantText);
+    &:hover {
+      @include uiHover(#000, .4);
+    }
   }
 }

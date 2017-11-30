@@ -28,20 +28,21 @@ $colorBackgroundContent: #fff;
 
 // border radius
 $borderRadiusForm: 3px;
+$access_color: #000;
 
 // box shadow
 $shadowForm: 0 1px 2px rgba(150, 150, 150, .5);
 
 //button
-$buttonNormalBorder: 1px solid #ddd;
+$buttonNormalBorderColor: #ddd;
 $colorButtonNormalBackground: #fff;
 $colorButtonNormalText: #555;
 
-$buttonImportantBorder: 1px solid $colorMain;
+$buttonImportantBorderColor: $colorMain;
 $colorButtonImportantBackground: $colorMain;
 $colorButtonImportantText: #fff;
 
-$buttonUnmportantBorder: 1px solid $colorMain;
+$buttonUnmportantBorderColor: $colorMain;
 $colorButtonUnmportantBackground: #fff;
 $colorButtonUnmportantText: $colorMain;
 
@@ -57,4 +58,9 @@ $colorButtonUnmportantText: $colorMain;
   border-color: $color transparent transparent;
   border-style: solid;
   border-width: $size;
+}
+
+// ui focus
+@mixin uiHover($shadowColor, $opacity){
+  box-shadow: 0 1px 5px rgba($shadowColor, $opacity);
 }
