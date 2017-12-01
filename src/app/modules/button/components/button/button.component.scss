@@ -27,16 +27,28 @@
   &:hover {
     @include uiHover(#000, .2);
   }
+  &:disabled {
+    @include uiHover(#000, 0);
+    opacity: .5;
+  }
   &.button-important {
     @include buttonStyle($buttonImportantBorderColor, $colorButtonImportantBackground, $colorButtonImportantText);
     &:hover {
       @include uiHover(#000, .4);
+    }
+    &:disabled {
+      @include uiHover(#000, 0);
+      opacity: .5;
     }
   }
   &.button-unimportant {
     @include buttonStyle($buttonUnmportantBorderColor, $colorButtonUnmportantBackground, $colorButtonUnmportantText);
     &:hover {
       @include uiHover(#000, .4);
+    }
+    &:disabled {
+      @include uiHover(#000, 0);
+      opacity: .5;
     }
   }
 }

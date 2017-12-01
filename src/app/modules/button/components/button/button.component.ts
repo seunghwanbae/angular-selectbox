@@ -9,10 +9,18 @@ export class ButtonComponent implements OnInit {
 
   public style: string;
 
-  @HostBinding('class') public styleClass: string = '';
+  @HostBinding('class')
+  public styleClass: string = '';
+
+  @HostBinding('attr.disabled')
+  public disabled: boolean;
 
   @Input('style') set setType(value) {
     this.setStyle(value);
+  }
+
+  @Input('disabled') set setDisabled(value) {
+    this.disabled = value;
   }
 
   constructor() {}
