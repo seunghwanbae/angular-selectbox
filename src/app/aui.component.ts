@@ -60,8 +60,35 @@ export class AuiComponent implements OnInit {
       value: 19, name: 'Project'
     }
   ];
+  public selectboxOptionsList = [
+    {
+      value: 0, name: 'All'
+    }, {
+      value: 1, name: 'Title'
+    }, {
+      value: 2, name: 'SubTitle'
+    }, {
+      value: 5, name: 'Comment',
+      list: [
+        {
+          value: 6, name: 'Content',
+        }, {
+          value: 6, name: 'Writer', disabled: true,
+          list: [
+            {value: 12, name: 'Group'},
+            {value: 9, name: 'Team'}
+          ]
+        }
+      ]
+    }, {
+      value: 9, name: 'Name'
+    }, {
+      value: 19, name: 'Project'
+    }
+  ];
   public selectboxValueSingle: any;
   public selectboxValueMulti: any;
+  public selectboxValueList: any;
 
   ngOnInit() {
     this.selectboxValueSingle = this.selectboxOptionsSingle[0];
@@ -73,6 +100,10 @@ export class AuiComponent implements OnInit {
 
   selectModelChangeMulti() {
     console.log('select model change: ', this.selectboxValueMulti );
+  }
+
+  selectModelChangeList() {
+    console.log('select model change: ', this.selectboxValueList );
   }
 
   constructor() {}

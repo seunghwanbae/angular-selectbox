@@ -1,5 +1,6 @@
 <button type="button"
-  #selectButton
+  #selectButtonElement
+  [title]="placeholder + ' select box'"
   class="selected-text"
   [class.is-disabled]="disabled"
   [class.is-readonly]="readonly"
@@ -16,8 +17,9 @@
 </button>
 
 <div
+  #listElement
   class="select-list"
-  *ngIf="isShowList && !disabled"
+  *ngIf="(isShowList && !disabled) || list"
   [class.is-readonly]="readonly"
   [ngStyle]="{'max-height.px': scrollHeight, 'max-width.px': scrollWidth}"
   (mouseover)="focusItem = undefined">

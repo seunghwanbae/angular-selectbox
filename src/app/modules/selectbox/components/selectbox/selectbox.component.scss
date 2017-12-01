@@ -8,6 +8,17 @@
   &.is-active {
     z-index: 3;
   }
+  &.is-list {
+    .selected-text {
+      display: none;
+    }
+    .select-list {
+      position: relative;
+      top: 0;
+      left: 0;
+      box-shadow: none;
+    }
+  }
 }
 :host.ng-invalid {
   &.ng-touched {

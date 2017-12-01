@@ -1,9 +1,7 @@
 import { Component,
   OnInit,
   Input,
-  Output,
   HostListener,
-  EventEmitter,
   ViewChild,
   ElementRef,
   Renderer2,
@@ -12,6 +10,7 @@ import { Component,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
+// Select Option Model
 export interface SelectboxOption {
   value: any;
   name: string;
@@ -38,7 +37,6 @@ export class SelectboxComponent implements OnInit, ControlValueAccessor {
   public disabled: boolean = false; // disabled state
   public readonly: boolean = false; // readonly state
   public placeholder: string = 'Select'; // placeholder
-  public list: boolean = false; // list view Mode
   public multiple: boolean = false; // multiple selection mode
   public multipleLimit: number = 0; // multiple selection limit
   public selectList: SelectboxOption[]; // select list
@@ -52,9 +50,16 @@ export class SelectboxComponent implements OnInit, ControlValueAccessor {
   public outsideScrollEvent: any;
 
   @HostBinding('class.is-active')
-  public isShowList: boolean = false;
+  public isShowList: boolean = false; // list show boolean
 
-  @ViewChild('selectButton') selectButton: ElementRef;
+  @HostBinding('class.is-list')
+  public list: boolean = false; // list view Mode
+
+  @ViewChild('selectButtonElement')
+  public selectButtonElement: ElementRef;
+
+  @ViewChild('listElement')
+  public listElement: ElementRef;
 
   @Input('selectList') set setSelectList( value ) {
     this.selectList = value;
@@ -70,6 +75,10 @@ export class SelectboxComponent implements OnInit, ControlValueAccessor {
   }
   @Input('list') set setList( value ) {
     this.list = value;
+
+    if ( this.listElement ) {
+      this.changeListMode( value );
+    }
   }
   @Input('multiple') set setMultiple( value ) {
     this.multiple = value;
@@ -90,6 +99,16 @@ export class SelectboxComponent implements OnInit, ControlValueAccessor {
   ) { }
 
   ngOnInit() {}
+
+  changeListMode( value ) {
+    const listElement = this.listElement.nativeElement;
+
+    if ( value ) {
+      this.renderer.setAttribute(listElement, 'tabindex', '-1');
+    } else {
+      this.renderer.removeAttribute(listElement, 'tabindex')
+    }
+  }
 
   @HostListener('keydown', ['$event'])
   keyDown(e) {
@@ -153,10 +172,14 @@ export class SelectboxComponent implements OnInit, ControlValueAccessor {
     let targetIndex = allItems.indexOf(this.focusItem);
 
     if ( !this.isShowList ) {
-      this.listToggle();
+      this.listToggle(true);
     }
     if ( !this.focusItem ) {
-      this.focusItem = allItems[0];
+      if ( keyName === 'up' ) {
+        this.focusItem = allItems[allItems.length - 1];
+      } else {
+        this.focusItem = allItems[0];
+      }
     } else {
       if ( keyName === 'up' ) {
         targetIndex = ( nowIndex - 1 < 0) ? allItems.length - 1 : nowIndex - 1;
@@ -203,6 +226,7 @@ export class SelectboxComponent implements OnInit, ControlValueAccessor {
     } else {
       this.selectedValues = [selectItem];
     }
+    this.selectButtonElement.nativeElement.focus();
     this.changeEmit( this.selectedValues );
   }
 
