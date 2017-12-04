@@ -26,11 +26,9 @@ export class ButtonComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
-    console.log('button');
   }
 
   setStyle(style) {
-    console.log(style);
     if ( style === 'important' ) {
       this.styleClass = 'button-important';
     } else if ( style === 'unimportant' ) {

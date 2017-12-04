@@ -2,8 +2,10 @@
   #selectButtonElement
   [title]="placeholder + ' select box'"
   class="selected-text"
-  [class.is-disabled]="disabled"
-  [class.is-readonly]="readonly"
+  [ngClass]="{
+    'is-disabled': disabled,
+    'is-readonly': readonly
+  }"
   (click)="listToggle()"
   (blur)="onTouched()">
   <ng-container *ngIf="selectedValues.length > 0; else selectedPlaceHolder">
@@ -19,10 +21,10 @@
 <div
   #listElement
   class="select-list"
+  [attr.tabindex]="list ? 0 : null"
   *ngIf="(isShowList && !disabled) || list"
   [class.is-readonly]="readonly"
-  [ngStyle]="{'max-height.px': scrollHeight, 'max-width.px': scrollWidth}"
-  (mouseover)="focusItem = undefined">
+  [ngStyle]="{'max-height.px': scrollHeight, 'max-width.px': scrollWidth}">
   <ul class="select-list__wrap" *ngIf="selectList.length <= 0; else selectListContainer">
     <li class="selectitem" >
       <span class="selectitem__wrap selectitem__wrap--nodata">No Select Data</span>
@@ -38,11 +40,15 @@
   <ul class="select-list__wrap">
     <li class="selectitem" *ngFor="let item of data.list">
       <span class="selectitem__wrap"
+        (mouseenter)="focusItem = item"
+        (mouseleave)="focusItem = undefined"
         *ngIf="!item.disabled && !data.disabled; else disabledSelectItem"
-        (click)="changeSelect(item)"
+        (click)="changeSelect(item);"
         [class.is-selected]="selectedValues.indexOf(item) > -1"
         [class.is-focus]="focusItem === item">{{item.name}}</span>
-      <ng-template #disabledSelectItem><span class="selectitem__wrap is-disabled">{{item.name}}</span></ng-template>
+      <ng-template #disabledSelectItem>
+        <span class="selectitem__wrap is-disabled" (click)="focusButtonElement()">{{item.name}}</span>
+      </ng-template>
       <ng-container *ngIf="item.list"
         [ngTemplateOutlet]="selectListTemplate"
         [ngTemplateOutletContext]="{$implicit: {list: item.list, disabled: data.disabled || item.disabled || (selectedValues.indexOf(item) > -1)}}">

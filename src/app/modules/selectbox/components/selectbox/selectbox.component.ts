@@ -19,6 +19,15 @@ export interface SelectboxOption {
   data?: any;
 }
 
+// key list
+const keyList = {
+  38: 'up',
+  40: 'down',
+  13: 'enter',
+  32: 'space',
+  27: 'esc'
+};
+
 @Component({
   selector: 'aui-selectbox',
   templateUrl: './selectbox.component.html',
@@ -61,6 +70,7 @@ export class SelectboxComponent implements OnInit, ControlValueAccessor {
   @ViewChild('listElement')
   public listElement: ElementRef;
 
+
   @Input('selectList') set setSelectList( value ) {
     this.selectList = value;
   }
@@ -75,10 +85,6 @@ export class SelectboxComponent implements OnInit, ControlValueAccessor {
   }
   @Input('list') set setList( value ) {
     this.list = value;
-
-    if ( this.listElement ) {
-      this.changeListMode( value );
-    }
   }
   @Input('multiple') set setMultiple( value ) {
     this.multiple = value;
@@ -100,19 +106,9 @@ export class SelectboxComponent implements OnInit, ControlValueAccessor {
 
   ngOnInit() {}
 
-  changeListMode( value ) {
-    const listElement = this.listElement.nativeElement;
-
-    if ( value ) {
-      this.renderer.setAttribute(listElement, 'tabindex', '-1');
-    } else {
-      this.renderer.removeAttribute(listElement, 'tabindex')
-    }
-  }
-
   @HostListener('keydown', ['$event'])
   keyDown(e) {
-    const keyName = this.checkKeyCode(e.keyCode);
+    const keyName = keyList[e.keyCode];
     if ( keyName === 'up' || keyName === 'down' ) {
       e.preventDefault();
       this.navigateSelect( keyName );
@@ -175,10 +171,14 @@ export class SelectboxComponent implements OnInit, ControlValueAccessor {
       this.listToggle(true);
     }
     if ( !this.focusItem ) {
-      if ( keyName === 'up' ) {
-        this.focusItem = allItems[allItems.length - 1];
+      if ( this.selectedValues.length > 0 ) {
+        this.focusItem = this.selectedValues[0];
       } else {
-        this.focusItem = allItems[0];
+        if ( keyName === 'up' ) {
+          this.focusItem = allItems[allItems.length - 1];
+        } else {
+          this.focusItem = allItems[0];
+        }
       }
     } else {
       if ( keyName === 'up' ) {
@@ -190,7 +190,7 @@ export class SelectboxComponent implements OnInit, ControlValueAccessor {
     }
 
     if ( !this.multiple ) {
-      this.changeSelect( this.focusItem );
+      this.changeSelect( this.focusItem, true );
     }
   }
 
@@ -200,10 +200,11 @@ export class SelectboxComponent implements OnInit, ControlValueAccessor {
     }
   }
 
-  changeSelect( selectItem ) {
+  changeSelect( selectItem, keyEvent? ) {
     let checkValue;
 
     if ( this.readonly ) {
+      this.selectButtonElement.nativeElement.focus();
       return false;
     }
 
@@ -211,23 +212,42 @@ export class SelectboxComponent implements OnInit, ControlValueAccessor {
       checkValue = this.selectedValues.find(( item, idx ) => {
         if ( item === selectItem ) {
           this.selectedValues.splice(idx, 1);
+          this.changeEmit( this.selectedValues );
           return true;
         }
       });
-      if ( this.selectedValues.length >= this.multipleLimit && this.multipleLimit > 0  ) {
-        return false;
-      }
-      if ( !checkValue ) {
-        this.selectedValues.push(selectItem);
-        if ( selectItem.list ) {
-          this.checkChildList(selectItem.list);
+      if ( this.selectedValues.length < this.multipleLimit || this.multipleLimit === 0  ) {
+        if ( !checkValue ) {
+          this.selectedValues.push(selectItem);
+          this.changeEmit( this.selectedValues );
+          if ( selectItem.list ) {
+            this.checkChildList(selectItem.list);
+          }
         }
       }
     } else {
-      this.selectedValues = [selectItem];
+      if (this.selectedValues[0] !== selectItem) {
+        this.selectedValues = [selectItem];
+        this.changeEmit(this.selectedValues);
+      }
     }
+    if (!keyEvent) {
+      this.selectToggle();
+    }
+    this.focusItem = selectItem;
     this.selectButtonElement.nativeElement.focus();
-    this.changeEmit( this.selectedValues );
+  }
+
+  selectToggle() {
+    if ( !this.readonly && !this.multiple ) {
+      this.listToggle(false);
+    }
+  }
+
+  focusButtonElement() {
+    if ( !this.list ) {
+      this.selectButtonElement.nativeElement.focus();
+    }
   }
 
   checkChildList ( list ) {
@@ -245,29 +265,20 @@ export class SelectboxComponent implements OnInit, ControlValueAccessor {
   getAllSelectItems() {
     const selectItems = [];
 
-    (function pushItem( list ) {
+    const pushItem = ( list ) => {
       list.filter((item) => {
         if ( !item.disabled ) {
+          const selectedCheck = this.selectedValues.indexOf(item);
           selectItems.push(item);
-          if ( item.list ) {
+          if ( item.list && selectedCheck < 0 ) {
             pushItem( item.list );
           }
         }
       });
-    })( this.selectList );
+    };
+    pushItem( this.selectList );
 
     return selectItems;
-  }
-
-  checkKeyCode(num) {
-    const keyList = {
-      38: 'up',
-      40: 'down',
-      13: 'enter',
-      32: 'space',
-      27: 'esc'
-    };
-    return ( keyList[num] ) ? keyList[num] : undefined;
   }
 
   changeEmit( valueArray: any[] ) {
@@ -289,7 +300,6 @@ export class SelectboxComponent implements OnInit, ControlValueAccessor {
   /* ControlValueAccessor */
   public onChange = (_) => { };
   public onTouched = () => {};
-  private propagateChange = (_: any) => { };
   writeValue(values: any) {
     const selectListItems = this.getAllSelectItems();
     let insertValue;

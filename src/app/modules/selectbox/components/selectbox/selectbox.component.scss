@@ -131,11 +131,15 @@
   white-space: nowrap;
   font-size: $fontSizeNormal;
   cursor: pointer;
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  &.is-focus,
-  &:hover {
+  &.is-selected {
+    background: $colorBackgroundSelected;
+    &:before {
+      opacity: 1;
+    }
+  }
+  &.is-focus {
     background: $colorBackgroundHover;
   }
   &:before {
@@ -145,15 +149,11 @@
     width: 3px;
     height: 5px;
     margin: -6px 4px 0 0;
-    border: 5px solid $colorMain;
+    border-color: $colorMain;
+    border-style: solid;
     border-width: 0 2px 2px 0;
     transform: rotate(45deg);
     opacity: 0;
-  }
-  &.is-selected {
-    &:before {
-      opacity: 1;
-    }
   }
   &.is-disabled {
     opacity: .5;

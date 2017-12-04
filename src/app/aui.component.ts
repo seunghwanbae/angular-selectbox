@@ -73,7 +73,7 @@ export class AuiComponent implements OnInit {
         {
           value: 6, name: 'Content',
         }, {
-          value: 6, name: 'Writer', disabled: true,
+          value: 6, name: 'Writer',
           list: [
             {value: 12, name: 'Group'},
             {value: 9, name: 'Team'}
