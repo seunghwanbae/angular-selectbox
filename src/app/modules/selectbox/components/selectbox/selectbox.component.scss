@@ -25,7 +25,10 @@
       .selected-text {
         border-color: $colorBorderError;
         &:after {
-          border-color: $colorBorderError transparent transparent transparent;
+          border-top-color: $colorBorderError;
+          border-right-color: transparent;
+          border-bottom-color: transparent;
+          border-left-color: transparent;
         }
       }
     }
