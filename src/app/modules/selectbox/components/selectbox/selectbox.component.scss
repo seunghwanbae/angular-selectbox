@@ -19,13 +19,14 @@
       box-shadow: none;
     }
   }
-}
-:host.ng-invalid {
-  &.ng-touched {
-    .selected-text {
-      border-color: $colorBorderError;
-      &:after {
-        border-color: $colorBorderError transparent transparent transparent;
+  &.ng-invalid {
+    &.ng-touched {
+      .select-list,
+      .selected-text {
+        border-color: $colorBorderError;
+        &:after {
+          border-color: $colorBorderError transparent transparent transparent;
+        }
       }
     }
   }
