@@ -17,16 +17,8 @@ export interface SelectboxOption {
   list?: any;
   disabled?: boolean;
   data?: any;
+  parent?: any;
 }
-
-// key list
-const keyList = {
-  38: 'up',
-  40: 'down',
-  13: 'enter',
-  32: 'space',
-  27: 'esc'
-};
 
 @Component({
   selector: 'aui-selectbox',
@@ -58,6 +50,16 @@ export class SelectboxComponent implements OnInit, ControlValueAccessor {
   public outsideFocusEvent: any;
   public outsideScrollEvent: any;
 
+  // key list
+  public keyList: any = {
+    38: 'up',
+    40: 'down',
+    13: 'enter',
+    32: 'space',
+    27: 'esc'
+  };
+
+
   @HostBinding('class.is-active')
   public isShowList: boolean = false; // list show boolean
 
@@ -69,7 +71,6 @@ export class SelectboxComponent implements OnInit, ControlValueAccessor {
 
   @ViewChild('listElement')
   public listElement: ElementRef;
-
 
   @Input('selectList') set setSelectList( value ) {
     this.selectList = value;
@@ -108,7 +109,7 @@ export class SelectboxComponent implements OnInit, ControlValueAccessor {
 
   @HostListener('keydown', ['$event'])
   keyDown(e) {
-    const keyName = keyList[e.keyCode];
+    const keyName = this.keyList[e.keyCode];
     if ( keyName === 'up' || keyName === 'down' ) {
       e.preventDefault();
       this.navigateSelect( keyName );
@@ -163,9 +164,9 @@ export class SelectboxComponent implements OnInit, ControlValueAccessor {
   }
 
   navigateSelect( keyName ) {
-    const allItems = this.getAllSelectItems();
+    const allItems = this.getSelectListSeries();
     const nowIndex = allItems.indexOf(this.focusItem);
-    let targetIndex = allItems.indexOf(this.focusItem);
+    let targetIndex = 0;
 
     if ( !this.isShowList ) {
       this.listToggle(true);
@@ -208,10 +209,11 @@ export class SelectboxComponent implements OnInit, ControlValueAccessor {
       return false;
     }
 
-    if ( this.multiple ) {
+    if ( this.multiple && (this.multipleLimit > 1 || this.multipleLimit === 0) ) {
       checkValue = this.selectedValues.find(( item, idx ) => {
         if ( item === selectItem ) {
           this.selectedValues.splice(idx, 1);
+          this.checkNode(selectItem);
           this.changeEmit( this.selectedValues );
           return true;
         }
@@ -219,15 +221,14 @@ export class SelectboxComponent implements OnInit, ControlValueAccessor {
       if ( this.selectedValues.length < this.multipleLimit || this.multipleLimit === 0  ) {
         if ( !checkValue ) {
           this.selectedValues.push(selectItem);
+          this.checkNode(selectItem);
           this.changeEmit( this.selectedValues );
-          if ( selectItem.list ) {
-            this.checkChildList(selectItem.list);
-          }
         }
       }
     } else {
       if (this.selectedValues[0] !== selectItem) {
         this.selectedValues = [selectItem];
+        this.checkNode(selectItem);
         this.changeEmit(this.selectedValues);
       }
     }
@@ -250,27 +251,59 @@ export class SelectboxComponent implements OnInit, ControlValueAccessor {
     }
   }
 
-  checkChildList ( list ) {
-    list.filter((obj) => {
-      const findIdx = this.selectedValues.indexOf(obj);
-      if ( findIdx > -1 ) {
-        this.selectedValues.splice(findIdx, 1);
-      }
-      if ( obj.list ) {
-        this.checkChildList(obj.list);
+  checkNode( selectItem ) {
+    const selectListSeries = this.getSelectListSeriesNode(this.selectList);
+    selectListSeries.find((obj) => {
+      if (obj.item === selectItem) {
+        if (obj.child) {
+          this.removeChildSelected(obj.child);
+        }
+        if (obj.parent) {
+          this.removeParentSelected(obj.parent, selectListSeries);
+        }
+        return true;
       }
     });
   }
 
-  getAllSelectItems() {
+  removeChildSelected( childList ) {
+    if ( !childList ) { return false; }
+
+    childList.filter((item) => {
+      const findIdx = this.selectedValues.indexOf(item);
+      if ( findIdx > -1 ) {
+        this.selectedValues.splice(findIdx, 1);
+      }
+      if ( item.list ) {
+        this.removeChildSelected(item.list);
+      }
+    });
+  }
+
+  removeParentSelected(parentItem, selectListSeries) {
+    let findIdx;
+
+    if ( !parentItem ) { return false; }
+    findIdx = this.selectedValues.indexOf(parentItem);
+    if ( findIdx > -1 ) {
+      this.selectedValues.splice(findIdx, 1);
+    }
+    selectListSeries.find((obj) => {
+      if ( obj.item === parentItem && obj.parent ) {
+        this.removeParentSelected(obj.parent, selectListSeries);
+        return true;
+      }
+    });
+  }
+
+  getSelectListSeries() {
     const selectItems = [];
 
     const pushItem = ( list ) => {
       list.filter((item) => {
         if ( !item.disabled ) {
-          const selectedCheck = this.selectedValues.indexOf(item);
           selectItems.push(item);
-          if ( item.list && selectedCheck < 0 ) {
+          if ( item.list ) {
             pushItem( item.list );
           }
         }
@@ -278,6 +311,24 @@ export class SelectboxComponent implements OnInit, ControlValueAccessor {
     };
     pushItem( this.selectList );
 
+    return selectItems;
+  }
+
+  getSelectListSeriesNode(list) {
+    const selectItems = [];
+    const pushItem = ( obj, parent = undefined ) => {
+      obj.filter((item) => {
+        selectItems.push({
+          item: item,
+          parent: parent,
+          child: item.list
+        });
+        if ( item.list ) {
+          pushItem( item.list, item );
+        }
+      });
+    };
+    pushItem( list );
     return selectItems;
   }
 
@@ -301,7 +352,7 @@ export class SelectboxComponent implements OnInit, ControlValueAccessor {
   public onChange = (_) => { };
   public onTouched = () => {};
   writeValue(values: any) {
-    const selectListItems = this.getAllSelectItems();
+    const selectListItems = this.getSelectListSeries();
     let insertValue;
 
     if ( values ) {

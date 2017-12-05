@@ -51,7 +51,7 @@
       </ng-template>
       <ng-container *ngIf="item.list"
         [ngTemplateOutlet]="selectListTemplate"
-        [ngTemplateOutletContext]="{$implicit: {list: item.list, disabled: data.disabled || item.disabled || (selectedValues.indexOf(item) > -1)}}">
+        [ngTemplateOutletContext]="{$implicit: {list: item.list, disabled: data.disabled || item.disabled}}">
       </ng-container>
     </li>
   </ul>

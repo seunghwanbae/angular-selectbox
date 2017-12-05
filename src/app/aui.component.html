@@ -46,7 +46,7 @@
         required
         [ngStyle]="{'width.px':150}">
       </aui-selectbox>
-      Single Selectbox Model: {{JSON.stringify(this.selectboxValueMulti)}}
+      Multi Selectbox Model: {{JSON.stringify(this.selectboxValueMulti)}}
 
       <h3 class="section-title">Select List</h3>
       <div class="example-wrap">
@@ -60,7 +60,28 @@
           [ngStyle]="{'width.px':250}">
         </aui-selectbox>
 
-        <p>Single Selectbox Model: {{JSON.stringify(this.selectboxValueList)}}</p>
+        <p>Select List Model: {{JSON.stringify(this.selectboxValueList)}}</p>
+
+        <h3 class="section-title">Readonly / Disabled</h3>
+        <aui-selectbox
+          [(ngModel)]="selectboxValueMulti"
+          [placeholder]="'Readonly Select'"
+          [multiple]="true"
+          [multipleLimit]="4"
+          [selectList]="selectboxOptionsMulti"
+          (ngModelChange)="selectModelChangeMulti()"
+          [readonly]="true"
+          [ngStyle]="{'width.px':150}">
+        </aui-selectbox>
+        <aui-selectbox
+          [(ngModel)]="selectboxValueMulti"
+          [placeholder]="'Disabled Select'"
+          [multiple]="true"
+          [selectList]="selectboxOptionsMulti"
+          [disabled]="true"
+          [ngStyle]="{'width.px':150}">
+        </aui-selectbox>
+
   </div>
 </div>
 <!--
