@@ -164,7 +164,7 @@ export class SelectboxComponent implements OnInit, ControlValueAccessor {
   }
 
   navigateSelect( keyName ) {
-    const allItems = this.getSelectListSeries();
+    const allItems = this.getSelectListSeries('focus');
     const nowIndex = allItems.indexOf(this.focusItem);
     let targetIndex = 0;
 
@@ -252,7 +252,7 @@ export class SelectboxComponent implements OnInit, ControlValueAccessor {
   }
 
   checkNode( selectItem ) {
-    const selectListSeries = this.getSelectListSeriesNode(this.selectList);
+    const selectListSeries = this.getSelectListSeries('node');
     selectListSeries.find((obj) => {
       if (obj.item === selectItem) {
         if (obj.child) {
@@ -296,39 +296,29 @@ export class SelectboxComponent implements OnInit, ControlValueAccessor {
     });
   }
 
-  getSelectListSeries() {
-    const selectItems = [];
-
-    const pushItem = ( list ) => {
-      list.filter((item) => {
-        if ( !item.disabled ) {
-          selectItems.push(item);
-          if ( item.list ) {
-            pushItem( item.list );
-          }
-        }
-      });
-    };
-    pushItem( this.selectList );
-
-    return selectItems;
-  }
-
-  getSelectListSeriesNode(list) {
+  getSelectListSeries(type: string) {
     const selectItems = [];
     const pushItem = ( obj, parent = undefined ) => {
       obj.filter((item) => {
-        selectItems.push({
-          item: item,
-          parent: parent,
-          child: item.list
-        });
+        if ( type === 'node' ) {
+          selectItems.push({
+            item: item,
+            parent: parent,
+            child: item.list
+          });
+        } else if ( type === 'focus') {
+          if ( !item.disabled ) {
+            selectItems.push(item);
+          } else {
+            return false;
+          }
+        }
         if ( item.list ) {
           pushItem( item.list, item );
         }
       });
     };
-    pushItem( list );
+    pushItem( this.selectList );
     return selectItems;
   }
 
@@ -352,7 +342,7 @@ export class SelectboxComponent implements OnInit, ControlValueAccessor {
   public onChange = (_) => { };
   public onTouched = () => {};
   writeValue(values: any) {
-    const selectListItems = this.getSelectListSeries();
+    const selectListItems = this.getSelectListSeries('focus');
     let insertValue;
 
     if ( values ) {
