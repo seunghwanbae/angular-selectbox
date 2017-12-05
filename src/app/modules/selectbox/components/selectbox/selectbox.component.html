@@ -24,7 +24,8 @@
   [attr.tabindex]="list ? 0 : null"
   *ngIf="(isShowList && !disabled) || list"
   [class.is-readonly]="readonly"
-  [ngStyle]="{'max-height.px': scrollHeight, 'max-width.px': scrollWidth}">
+  [ngStyle]="{'max-height.px': scrollHeight, 'max-width.px': scrollWidth}"
+  (blur)="onTouched()">
   <ul class="select-list__wrap" *ngIf="selectList.length <= 0; else selectListContainer">
     <li class="selectitem" >
       <span class="selectitem__wrap selectitem__wrap--nodata">No Select Data</span>
